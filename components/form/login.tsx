@@ -72,7 +72,11 @@ export function Login() {
             <FormItem className="w-full">
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="***********" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Ingresee la contraseña"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
