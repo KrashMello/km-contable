@@ -1,14 +1,68 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  username   String    @unique
+  password   String?
+  updated_at DateTime  @default(now())
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+}
+
+model Category_type {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+}
+
+model Category {
+  id                    Int                  @id @default(autoincrement())
+  id_user               User[]
+  name                  String               @unique
+  id_category_type      Category_type[]
+  Income_and_expenses   Income_and_expenses? @relation(fields: [income_and_expensesId], references: [id])
+  income_and_expensesId Int?
+}
+
+model Currency {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  abbreviation String
+  Account      Account? @relation(fields: [accountId], references: [id])
+  accountId    Int?
+}
+
+model Account_type {
+  id        Int      @id @default(autoincrement())
+  name      String
+  Account   Account? @relation(fields: [accountId], references: [id])
+  accountId Int?
+}
+
+model Account {
+  id                    Int                  @id @default(autoincrement())
+  id_account_type       Account_type[]
+  id_currency           Currency[]
+  name                  String
+  Income_and_expenses   Income_and_expenses? @relation(fields: [income_and_expensesId], references: [id])
+  income_and_expensesId Int?
+}
+
+model Income_and_expenses {
+  id          Int        @id @default(autoincrement())
+  date_entry  DateTime
+  amount      Float
+  id_category Category[]
+  id_account  Account[]
 }
