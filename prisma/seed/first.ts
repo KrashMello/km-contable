@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 async function main() {
   const ACCOUNT_TYPE_LISTS = [
@@ -24,7 +25,7 @@ async function main() {
   await prisma.user.create({
     data: {
       username: "krashmello",
-      password: "1234",
+      password: bcrypt.hashSync("1234", 10),
     },
   });
 }
