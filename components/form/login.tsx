@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -35,14 +34,22 @@ export function Login() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    fetch("/api/auth", {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        window.cookieStore.set({
+          expires: Date.now() + 1000 * 60 * 60,
+          name: "auth",
+          value: data,
+          path: "/",
+        });
+        // console.log(data);
+      });
   }
 
   return (
