@@ -33,23 +33,25 @@ export function Login() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    fetch("/api/auth", {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    let response = await fetch("/api/auth", {
       method: "POST",
       body: JSON.stringify(data),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        window.cookieStore.set({
-          expires: Date.now() + 1000 * 60 * 60,
-          name: "auth",
-          value: data,
-          path: "/",
-        });
-        // console.log(data);
-      });
+    });
+    if (response.status !== 200) {
+      console.log("Wrong credentials");
+      return;
+    }
+
+    let responseData = await response.json();
+
+    window.cookieStore.set({
+      expires: Date.now() + 1000 * 60 * 60,
+      name: "auth",
+      value: responseData,
+      path: "/",
+    });
+    window.location.replace(`http://${window.location.host}/dashboard`);
   }
 
   return (
