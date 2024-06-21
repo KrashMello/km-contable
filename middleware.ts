@@ -1,10 +1,16 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const currentUser = request.cookies.get("auth");
-  if (!currentUser || request.nextUrl.pathname !== "/") {
+
+  if (!currentUser && request.nextUrl.pathname !== "/")
     return NextResponse.redirect(new URL("/", request.url));
-  }
+
+  if (currentUser && request.nextUrl.pathname === "/")
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+
+  if (request.nextUrl.pathname === "/") return;
+
   let data;
   await fetch("http://localhost:3000/api/auth/verify", {
     method: "POST",
@@ -14,9 +20,7 @@ export async function middleware(request: NextRequest) {
     .then((res) => {
       data = res;
     });
-  if (data) {
-    return;
-  }
+  if (data) return;
 }
 
 export const config = {
