@@ -26,8 +26,8 @@ export default async function POST(
     return res.status(401).json({ message: "Wrong credentials" });
 
   delete user.password;
-  const token = jwt.sign({ username }, "asdf", { expiresIn: "1h" });
-  console.log(jwt.verify(token, "asdf"));
-  console.log(token);
+  const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
   return res.status(200).json(token);
 }
