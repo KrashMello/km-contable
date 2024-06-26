@@ -1,4 +1,5 @@
 import Pipe from "@/components/chart/pipe";
+import LineChart from "@/components/ui/chartLine";
 import InfoBox from "@/components/ui/info-box";
 import {
   Table,
@@ -22,7 +23,7 @@ export default async function Home() {
           <div className="w-full h-10 bg-gray-400 text-white px-3 items-center flex">
             <h3 className="text-lg font-semibold">Expenses</h3>
           </div>
-          <Pipe></Pipe>
+          <LineChart></LineChart>
         </div>
         <div className="w-[45%] h-64 overflow-hidden rounded-lg">
           <div className="w-full h-10 bg-gray-400 text-white px-3 items-center flex">
