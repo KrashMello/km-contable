@@ -18,6 +18,7 @@ export default function Pipe() {
           "rgb(54, 162, 235)",
           "rgb(255, 205, 86)",
         ],
+        borderColor: "black",
         hoverOffset: 4,
       },
     ],
