@@ -13,7 +13,7 @@ import {
 export default async function Home() {
   return (
     <main className="w-full px-12 py-8 flex flex-col gap-4 ">
-      <div className="w-full flex justify-between ">
+      <div className="grid auto-rows-max gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full">
         <InfoBox title="Income" color="green" amount={5000} currency="$" />
         <InfoBox title="Expenses" color="red" amount={5000} currency="$" />
         <InfoBox title="Other" color="yellow" amount={5000} currency="$" />
