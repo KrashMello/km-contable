@@ -11,14 +11,55 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getCookie } from "cookies-next";
+import { cookies } from "next/headers";
 export default async function Home() {
   let incomes = 0;
+
+  let data: any = await fetch(
+    `${process.env.API_URL}/incomesAndExpenses/getAllMounts`,
+    {
+      method: "GET",
+      headers: {
+        "x-access-id": String(getCookie("auth", { cookies })),
+      },
+    },
+  );
+  let accounts = await fetch(`${process.env.API_URL}/account/`, {
+    method: "GET",
+    headers: {
+      "x-access-id": String(getCookie("auth", { cookies })),
+    },
+  });
+  accounts = await accounts.json();
+  let typeTransations = await fetch(
+    `${process.env.API_URL}/incomesAndExpenses/types`,
+    {
+      method: "GET",
+      headers: {
+        "x-access-id": String(getCookie("auth", { cookies })),
+      },
+    },
+  );
+  typeTransations = await typeTransations.json();
+  console.log(typeTransations);
+  data = await data.json();
   return (
     <main className="w-full px-4 md:px-12 py-8 flex flex-col gap-4 ">
-      <ModalsGroups />
+      <ModalsGroups accounts={accounts} typeTransations={typeTransations} />
       <div className="flex flex-wrap gap-5 w-full">
-        <InfoBox title="Income" color="green" amount={5000} currency="$" />
-        <InfoBox title="Expenses" color="red" amount={5000} currency="$" />
+        <InfoBox
+          title="Income"
+          color="green"
+          amount={data[0].totalAmount}
+          currency="$"
+        />
+        <InfoBox
+          title="Expenses"
+          color="red"
+          amount={data[1].totalAmount}
+          currency="$"
+        />
         <InfoBox title="Other" color="yellow" amount={5000} currency="$" />
       </div>
       <div className="flex flex-wrap gap-5 md:justify-between w-full">
