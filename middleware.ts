@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const currentUser: any = request;
-  console.log(currentUser);
+  const currentUser: any = request.cookies.get("auth");
+  console.log();
   if (!currentUser && request.nextUrl.pathname !== "/")
     return NextResponse.redirect(new URL("/", request.url));
 
