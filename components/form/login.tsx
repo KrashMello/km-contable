@@ -64,7 +64,7 @@ export function Login() {
 
     setCookie("auth", responseData.message.id, {
       path: "/",
-      maxAge: 5,
+      maxAge: 3600,
     });
     window.location.replace(`http://${window.location.host}/dashboard`);
   }
