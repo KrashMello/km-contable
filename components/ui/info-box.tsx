@@ -29,20 +29,17 @@ const InfoBox = ({
   return (
     <Card
       x-chunk="dashboard-01-chunk-0"
-      className="bg-primary text-primary-foreground"
+      className="flex-grow h-fit rounded-lg w-40  bg-slate-700 text-slate-200"
     >
       <CardHeader className="pb-2">
-        <CardDescription>{title}</CardDescription>
-        <CardTitle className="text-4xl">{`${currency}${amount}`}</CardTitle>
+        <CardDescription className="text-sm">{title}</CardDescription>
+        <CardTitle className="text-md md:text-4xl">{`${currency}${amount}`}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="text-xs text-muted-foreground">+25% from last week</div>
-      </CardContent>
       <CardFooter>
         <Progress
-          value={amount}
+          value={(amount / amount) * 100 - 90}
           aria-label="25% increase"
-          className="bg-primary-foreground/20"
+          className="bg-slate-300"
         />
       </CardFooter>
     </Card>

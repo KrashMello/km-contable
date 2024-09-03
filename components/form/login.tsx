@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { setCookie } from "cookies-next";
 
 import {
   Card,
@@ -22,6 +23,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -40,30 +44,33 @@ export function Login() {
       password: "",
     },
   });
+  const [errors, setErrors] = useState(null);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    let response = await fetch("/api/auth", {
+    let response = await fetch("http://localhost:5000/auth/login", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(data),
     });
     if (response.status !== 200) {
-      console.log("Wrong credentials");
+      let responseData = await response.json();
+      console.log(responseData.message);
+      setErrors(responseData.message);
       return;
     }
-
     let responseData = await response.json();
 
-    window.cookieStore.set({
-      expires: Date.now() + 1000 * 60 * 60,
-      name: "auth",
-      value: responseData,
+    setCookie("auth", responseData.message.id, {
       path: "/",
+      maxAge: 5,
     });
     window.location.replace(`http://${window.location.host}/dashboard`);
   }
 
   return (
-    <Card className="w-full max-w-md p-6 bg-background shadow-lg">
+    <Card className="w-full max-w-md p-6 bg-slate-600 text-slate-100 shadow-lg">
       <CardHeader className="space-y-2">
         <div className="flex items-center justify-center">
           <LogInIcon className="h-12 w-12 text-primary" />
@@ -74,6 +81,13 @@ export function Login() {
         <CardDescription className="text-muted-foreground text-center">
           Enter your email and password to sign in.
         </CardDescription>
+        {errors && (
+          <Alert className="text-red-500 border-red-500 bg-red-100">
+            <AlertCircle className="h-4 w-4 " />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{errors}</AlertDescription>
+          </Alert>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
         <Form {...form}>
@@ -89,7 +103,7 @@ export function Login() {
                   <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
-                      className="outline-none ring-0"
+                      className="focus-visible:outline-none focus-visible:ring-0 text-slate-700"
                       placeholder="Enter your username."
                       {...field}
                     />
@@ -106,7 +120,7 @@ export function Login() {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="outline-none ring-0"
+                      className="focus-visible:outline-none focus-visible:ring-0 text-slate-700"
                       type="password"
                       placeholder="Enter your password."
                       {...field}
