@@ -29,7 +29,7 @@ const InfoBox = ({
   return (
     <Card
       x-chunk="dashboard-01-chunk-0"
-      className="flex-grow h-fit rounded-lg w-24 bg-slate-700 text-slate-200"
+      className="flex-grow h-fit rounded-lg w-24 "
     >
       <CardHeader className="pb-2">
         <CardDescription className="text-sm">{title}</CardDescription>
@@ -39,7 +39,6 @@ const InfoBox = ({
         <Progress
           value={(amount / amount) * 100 - 90}
           aria-label="25% increase"
-          className="bg-slate-300"
         />
       </CardFooter>
     </Card>
