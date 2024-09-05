@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/") return;
 
   let data;
-  await fetch("http://localhost:5000/account", {
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account`, {
     method: "GET",
     headers: { "x-access-id": currentUser.value },
   }).then((res) => {
