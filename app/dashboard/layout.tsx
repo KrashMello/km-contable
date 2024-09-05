@@ -39,22 +39,16 @@ const menu = [
   },
 ];
 
+const bodyClass = "bg-slate-200 min-h-screen font-sans antialiased";
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <body
-      className={cn(
-        "bg-slate-900 min-h-screen font-sans antialiased",
-        fontHeading.variable,
-        fontBody.variable,
-      )}
-    >
-      <div className="flex justify-between items-center px-8 h-16 bg-slate-700 text-slate-300 max-w-400 max-h-20 md:border">
+    <body className={cn(bodyClass, fontHeading.variable, fontBody.variable)}>
+      <div className="flex justify-between items-center px-8 h-16 max-w-400 max-h-20 md:border">
         <h2 className="text-muted-foreground font-bold">KM CONTABLE</h2>
-        <span>campana</span>
       </div>
       <div className="flex flex-row w-full">
         <nav className="hidden md:flex bg-muted/40 flex-col gap-2 p-4 w-80 text-sm font-medium border-r border-muted">
