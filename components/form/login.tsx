@@ -47,16 +47,18 @@ export function Login() {
   const [errors, setErrors] = useState(null);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    let response = await fetch("http://localhost:5000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    let response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
+    );
     if (response.status !== 200) {
       let responseData = await response.json();
-      console.log(responseData.message);
       setErrors(responseData.message);
       return;
     }
@@ -70,7 +72,7 @@ export function Login() {
   }
 
   return (
-    <Card className="w-full max-w-md p-6 bg-slate-600 text-slate-100 shadow-lg">
+    <Card className="w-full max-w-md p-6 shadow-lg">
       <CardHeader className="space-y-2">
         <div className="flex items-center justify-center">
           <LogInIcon className="h-12 w-12 text-primary" />
@@ -102,11 +104,7 @@ export function Login() {
                 <FormItem className="w-full">
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input
-                      className="focus-visible:outline-none focus-visible:ring-0 text-slate-700"
-                      placeholder="Enter your username."
-                      {...field}
-                    />
+                    <Input placeholder="Enter your username." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,7 +118,6 @@ export function Login() {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
-                      className="focus-visible:outline-none focus-visible:ring-0 text-slate-700"
                       type="password"
                       placeholder="Enter your password."
                       {...field}
