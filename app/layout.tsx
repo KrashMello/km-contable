@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: "KM Contable App",
   description: "accounting application",
 };
-
+const bodyClass = "min-h-screen bg-background font-sans antialiased";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,13 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontHeading.variable,
-          fontBody.variable,
-        )}
-      >
+      <body className={cn(bodyClass, fontHeading.variable, fontBody.variable)}>
         {children}
       </body>
     </html>
