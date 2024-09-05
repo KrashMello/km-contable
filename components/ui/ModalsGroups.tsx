@@ -72,7 +72,16 @@ export default function ModalsGroups(props: {
     },
   });
   const [open, setOpen] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors]: [
+    {
+      description?: string;
+      amount?: string;
+      accountId?: string;
+      typeId?: string;
+      date_entry?: string;
+    },
+    any,
+  ] = useState({});
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     data.dateEntry = format(data.dateEntry, "yyyy-MM-dd");
     let result = await fetch(
@@ -96,7 +105,7 @@ export default function ModalsGroups(props: {
     }
   }
   return (
-    <div className="fixed left-[-25px] bottom-[32px] flex flex-col z-50 items-end justify-end w-screen  gap-8 h-screen">
+    <div className="fixed right-5 bottom-[32px] flex flex-col z-50 items-end justify-end gap-8">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="focus-visible:ring-0 focus-visible:outline-none border rounded-full size-14 border-muted">
@@ -149,7 +158,11 @@ export default function ModalsGroups(props: {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormMessage />
+                      {errors.date_entry ? (
+                        <FormMessage>{errors.date_entry}</FormMessage>
+                      ) : (
+                        <FormMessage />
+                      )}
                     </FormItem>
                   )}
                 />
@@ -167,7 +180,6 @@ export default function ModalsGroups(props: {
                       ) : (
                         <FormMessage />
                       )}
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -203,7 +215,11 @@ export default function ModalsGroups(props: {
                           <h4>Debe registrar una cuenta</h4>
                         )}
                       </FormControl>
-                      <FormMessage />
+                      {errors.accountId ? (
+                        <FormMessage>{errors.accountId}</FormMessage>
+                      ) : (
+                        <FormMessage />
+                      )}
                     </FormItem>
                   )}
                 />
@@ -235,7 +251,11 @@ export default function ModalsGroups(props: {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      <FormMessage />
+                      {errors.typeId ? (
+                        <FormMessage>{errors.typeId}</FormMessage>
+                      ) : (
+                        <FormMessage />
+                      )}
                     </FormItem>
                   )}
                 />
