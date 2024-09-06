@@ -1,32 +1,15 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-export const description = "A bar chart with a label";
-
-const chartData = [
-  { account: "banco venezuela mama", amount: 186 },
-  { account: "binance", amount: 305 },
-  { account: "banco venezuela", amount: 237 },
-  { account: "efectivo", amount: 237 },
-  { account: "efectivo divisa", amount: 237 },
-];
+import { useEffect } from "react";
+import { accountStore } from "@/store";
 
 const chartConfig = {
   amount: {
@@ -36,6 +19,13 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function BarCharts() {
+  const getAllAccountAmount = accountStore(
+    (state) => state.getAllAccountAmount,
+  );
+  const chartData = accountStore((state) => state.accountsAmount);
+  useEffect(() => {
+    getAllAccountAmount();
+  }, [getAllAccountAmount]);
   return (
     <div>
       <ChartContainer config={chartConfig} className="w-full">
