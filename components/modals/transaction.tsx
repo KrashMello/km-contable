@@ -36,13 +36,14 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
-import { Calendar } from "./calendar";
+import { Calendar } from "@/components/ui/calendar";
 import { getCookie } from "cookies-next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { accountStore, transactionStore } from "@/store";
 
 const FormSchema = z
   .object({
-    dateEntry: z.date(),
+    dateEntry: z.union([z.date(), z.string()]),
     description: z.string(),
     amount: z.string().min(1, { message: "El monto es requerido" }),
     typeId: z
@@ -57,10 +58,7 @@ const FormSchema = z
     accountId: true,
   });
 
-export default function ModalsGroups(props: {
-  accounts: any;
-  typeTransations: any;
-}) {
+export default function ModalTransaction() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -71,6 +69,17 @@ export default function ModalsGroups(props: {
       accountId: "",
     },
   });
+  const getAccounts = accountStore((state) => state.getAccount);
+  const getType = transactionStore((state) => state.getType);
+  const createTransaction = transactionStore(
+    (state) => state.createTransaction,
+  );
+  const accounts = accountStore((state) => state.accounts);
+  const transactionTypes = transactionStore((state) => state.types);
+  useEffect(() => {
+    getAccounts();
+    getType();
+  }, [getAccounts, getType]);
   const [open, setOpen] = useState(false);
   const [errors, setErrors]: [
     {
@@ -84,24 +93,13 @@ export default function ModalsGroups(props: {
   ] = useState({});
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     data.dateEntry = format(data.dateEntry, "yyyy-MM-dd");
-    let result = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/incomesAndExpenses/`,
-      {
-        method: "POST",
-        headers: {
-          "x-access-id": String(getCookie("auth")),
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      },
-    );
-    const status = await result.status;
-    result = await result.json();
+    let [status, result] = await createTransaction(data);
     if (status !== 200) {
       setErrors(result.message);
       return;
     } else {
       setOpen(false);
+      form.reset();
     }
   }
   return (
@@ -150,7 +148,7 @@ export default function ModalsGroups(props: {
                         <PopoverContent className="w-full p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={field.value}
+                            selected={field.value as Date}
                             onSelect={field.onChange}
                             disabled={(date) =>
                               date > new Date() || date < new Date("1900-01-01")
@@ -190,7 +188,7 @@ export default function ModalsGroups(props: {
                     <FormItem className="w-full">
                       <FormLabel>Cuenta</FormLabel>
                       <FormControl>
-                        {props.accounts.length > 0 ? (
+                        {accounts.length > 0 ? (
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -199,7 +197,7 @@ export default function ModalsGroups(props: {
                               <SelectValue placeholder="seleccione un tipo de cuenta" />
                             </SelectTrigger>
                             <SelectContent>
-                              {props.accounts.map((account: any) => {
+                              {accounts.map((account: any) => {
                                 return (
                                   <SelectItem
                                     key={window.crypto.randomUUID()}
@@ -238,12 +236,9 @@ export default function ModalsGroups(props: {
                             <SelectValue placeholder="seleccione el tipo de transaccion" />
                           </SelectTrigger>
                           <SelectContent>
-                            {props.typeTransations.map((type: any) => {
+                            {transactionTypes.map((type: any) => {
                               return (
-                                <SelectItem
-                                  key={window.crypto.randomUUID()}
-                                  value={`${type.id}`}
-                                >
+                                <SelectItem key={type.id} value={`${type.id}`}>
                                   {type.name}
                                 </SelectItem>
                               );
