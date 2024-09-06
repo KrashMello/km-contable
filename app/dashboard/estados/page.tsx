@@ -1,8 +1,6 @@
+import { format } from "date-fns";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
-import { format } from "date-fns";
-import { LineCharts } from "@/components/chart/lineChart";
-import { PieCharts } from "@/components/chart/pieChart";
 import {
   Table,
   TableBody,
@@ -15,17 +13,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadarCharts } from "@/components/chart/radarChart";
 import { BarCharts } from "@/components/chart/barChart";
+import { ExpensesTable } from "@/components/tables/expenses";
+import { IncomesTable } from "@/components/tables/incomes";
 export default async function Estate() {
-  let expenses = await fetch(
-    `${process.env.API_URL}/transaction/getAllExpenses`,
-    {
-      method: "GET",
-      headers: {
-        "x-access-id": String(getCookie("auth", { cookies })),
-      },
-    },
-  );
-  expenses = await expenses.json();
   let incomes = await fetch(
     `${process.env.API_URL}/transaction/getAllIncomes`,
     {
@@ -52,30 +42,7 @@ export default async function Estate() {
               <RadarCharts />
             </div>
             <div className="w-full md:w-2/5 ">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Fecha</TableHead>
-                    <TableHead>Importe</TableHead>
-                    <TableHead className="text-right">Descripcion</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {expenses.map((expense: any) => {
-                    return (
-                      <TableRow key={expense.id}>
-                        <TableCell className="font-medium">
-                          {format(expense.date_entry, "dd/MM/yyyy")}
-                        </TableCell>
-                        <TableCell>{`${expense.account.currency.abbreviation} ${expense.amount}`}</TableCell>
-                        <TableCell className="text-right">
-                          {expense.description}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+              <ExpensesTable />
             </div>
           </div>
         </TabsContent>
@@ -88,32 +55,7 @@ export default async function Estate() {
               <BarCharts />
             </div>
             <div className="w-full md:w-[55%]">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[100px]">Fecha</TableHead>
-                    <TableHead>Importe</TableHead>
-                    <TableHead className="text-right">Descripcion</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {incomes.map((income: any) => {
-                    return (
-                      <>
-                        <TableRow key={income.id}>
-                          <TableCell className="font-medium">
-                            {format(income.date_entry, "dd/MM/yyyy")}
-                          </TableCell>
-                          <TableCell>{`${income.account.currency.abbreviation} ${income.amount}`}</TableCell>
-                          <TableCell className="text-right">
-                            {income.description}
-                          </TableCell>
-                        </TableRow>
-                      </>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+              <IncomesTable />
             </div>
           </div>
         </TabsContent>
