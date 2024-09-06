@@ -6,6 +6,8 @@ import Link from "next/link";
 import ModalsGroups from "@/components/ui/ModalsGroups";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
+import ModalAccount from "@/components/modals/account";
+import ModalTransaction from "@/components/modals/transaction";
 
 const fontHeading = IBM_Plex_Mono({
   subsets: ["latin"],
@@ -62,7 +64,7 @@ const menu = [
   },
   {
     title: "Cuentas",
-    to: "/dashboard",
+    to: "/dashboard/cuentas",
     icon: (
       <svg
         className="size-5"
@@ -120,15 +122,15 @@ export default async function RootLayout({
           })}
         </nav>
 
-        <ModalsGroups accounts={accounts} typeTransations={typeTransations} />
         {children}
+        <ModalTransaction />
         <nav className="flex md:hidden bg-primary text-white flex-row gap-5 px-4 h-16 items-center w-full text-sm font-bold fixed bottom-0">
           {menu.map((m, i) => {
             return (
               <Link
                 key={i}
                 href={m.to}
-                className="flex flex-col items-center text-sm"
+                className="flex flex-col justify-center items-center text-xs h-full w-20"
               >
                 {m.icon}
                 {m.title}
