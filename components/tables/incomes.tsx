@@ -33,7 +33,7 @@ export function IncomesTable() {
                 <TableCell className="font-medium">
                   {format(income.date_entry, "dd/MM/yyyy")}
                 </TableCell>
-                <TableCell>{`${income.account.currency.abbreviation} ${income.amount}`}</TableCell>
+                <TableCell>{`${income.category.currency.abbreviation} ${income.amount}`}</TableCell>
                 <TableCell className="text-right">
                   {income.description}
                 </TableCell>

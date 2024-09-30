@@ -32,7 +32,7 @@ export function ExpensesTable() {
               <TableCell className="font-medium">
                 {format(expense.date_entry, "dd/MM/yyyy")}
               </TableCell>
-              <TableCell>{`${expense.account.currency.abbreviation} ${expense.amount}`}</TableCell>
+              <TableCell>{`${expense.amount}`}</TableCell>
               <TableCell className="text-right">
                 {expense.description}
               </TableCell>
