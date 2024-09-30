@@ -5,6 +5,7 @@ export const transactionStore = create<State & Action>((set, get) => ({
   expenses: [],
   incomes: [],
   types: [],
+  allExpensesTypes: [],
   getExpenses: async () => {
     let result: any = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/transaction/getAllExpenses`,
@@ -30,6 +31,19 @@ export const transactionStore = create<State & Action>((set, get) => ({
     );
     result = await result.json();
     set({ incomes: result });
+  },
+  getAllAmountExpenses: async () => {
+    let result: any = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/transaction/getAllAmountExpenses`,
+      {
+        method: "GET",
+        headers: {
+          "x-access-id": String(getCookie("auth")),
+        },
+      },
+    );
+    result = await result.json();
+    set({ allExpensesTypes: result });
   },
   getType: async () => {
     let result: any = await fetch(

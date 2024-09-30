@@ -9,7 +9,7 @@ export const accountStore = create<State & Action>((set, get) => ({
   accountsAmount: [],
   getCurrency: async () => {
     let result: any = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/account/currency`,
+      `${process.env.NEXT_PUBLIC_API_URL}/category/currency`,
       {
         method: "GET",
         headers: {
@@ -22,7 +22,7 @@ export const accountStore = create<State & Action>((set, get) => ({
   },
   getAccountType: async () => {
     let result: any = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/account/types`,
+      `${process.env.NEXT_PUBLIC_API_URL}/category/transactionType`,
       {
         method: "GET",
         headers: {
@@ -35,7 +35,7 @@ export const accountStore = create<State & Action>((set, get) => ({
   },
   getAccount: async () => {
     let result: any = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/account`,
+      `${process.env.NEXT_PUBLIC_API_URL}/category/?transactionType=1`,
       {
         method: "GET",
         headers: {
@@ -48,7 +48,7 @@ export const accountStore = create<State & Action>((set, get) => ({
   },
   getAllAccountAmount: async () => {
     let result: any = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/account/getAllAccountAmount`,
+      `${process.env.NEXT_PUBLIC_API_URL}/transaction/getAllMountsIncomes`,
       {
         method: "GET",
         headers: {
@@ -57,11 +57,11 @@ export const accountStore = create<State & Action>((set, get) => ({
       },
     );
     result = await result.json();
-    set({ accountsAmount: result.message });
+    set({ accountsAmount: result });
   },
   createAccount: async (data) => {
     let result: any = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/Account`,
+      `${process.env.NEXT_PUBLIC_API_URL}/category`,
       {
         method: "POST",
         headers: {

@@ -2,7 +2,7 @@ type State = {
   expenses: {
     id: string;
     date_entry: string;
-    account: { currency: { abbreviation: string } };
+    category: { currency: { abbreviation: string } };
     amount: string;
     description: string;
   }[];
@@ -13,6 +13,10 @@ type State = {
     amount: string;
     description: string;
   }[];
+  allExpensesTypes: {
+    total_amount: string;
+    name: string;
+  }[];
   types: {
     id: string;
     name: string;
@@ -21,6 +25,8 @@ type State = {
 
 type Action = {
   getExpenses: () => void;
+  getIncomes: () => void;
+  getAllAmountExpenses: () => void;
   getType: () => void;
   createTransaction: (data: {
     description: string;
