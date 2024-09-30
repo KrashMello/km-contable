@@ -16,15 +16,12 @@ import { BarCharts } from "@/components/chart/barChart";
 import { ExpensesTable } from "@/components/tables/expenses";
 import { IncomesTable } from "@/components/tables/incomes";
 export default async function Estate() {
-  let incomes = await fetch(
-    `${process.env.API_URL}/transaction/getAllIncomes`,
-    {
-      method: "GET",
-      headers: {
-        "x-access-id": String(getCookie("auth", { cookies })),
-      },
+  let incomes = await fetch(`${process.env.API_URL}/transaction/getIncomes`, {
+    method: "GET",
+    headers: {
+      "x-access-id": String(getCookie("auth", { cookies })),
     },
-  );
+  });
   incomes = await incomes.json();
   return (
     <main className="w-full px-4 md:px-12 pt-8 pb-20 flex flex-col gap-4 ">
