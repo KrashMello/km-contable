@@ -38,7 +38,7 @@ export function BarCharts() {
         >
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="account"
+            dataKey="name"
             tickLine={false}
             tickMargin={10}
             axisLine={false}
@@ -47,7 +47,7 @@ export function BarCharts() {
 
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
 
-          <Bar dataKey="amount" fill="var(--color-amount)" radius={8}>
+          <Bar dataKey="total_amount" fill="var(--color-amount)" radius={8}>
             <LabelList
               position="top"
               offset={12}

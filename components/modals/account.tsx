@@ -74,7 +74,7 @@ export default function ModalAccount() {
     any,
   ] = useState({});
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    let [status, result] = await creaeAccount(data);
+    let [status, result] = await createAccount(data);
     if (status !== 200) {
       setErrors(result.message);
       return;

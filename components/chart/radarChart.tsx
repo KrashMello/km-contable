@@ -17,17 +17,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-export const description = "A radar chart with dots";
-
-const chartData = [
-  { account: "comida", amount: 50 },
-  { account: "otros", amount: 73 },
-  { account: "medicos", amount: 10 },
-  { account: "ropa", amount: 37 },
-  { account: "cursos", amount: 20 },
-  { account: "juegos", amount: 72 },
-];
+import { transactionStore } from "@/store";
+import { useEffect } from "react";
 
 const chartConfig = {
   amount: {
@@ -36,6 +27,15 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+export const description = "A radar chart with dots";
+
+const getAllAccountAmount = transactionStore(
+  (state) => state.getAllAmountExpenses,
+);
+const chartData = transactionStore((state) => state.allExpensesTypes);
+useEffect(() => {
+  getAllAccountAmount();
+}, [getAllAccountAmount]);
 export function RadarCharts() {
   return (
     <div>
@@ -45,10 +45,10 @@ export function RadarCharts() {
       >
         <RadarChart data={chartData}>
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <PolarAngleAxis dataKey="account" />
+          <PolarAngleAxis dataKey="name" />
           <PolarGrid />
           <Radar
-            dataKey="amount"
+            dataKey="total_amount"
             fill="var(--color-amount)"
             fillOpacity={0.6}
             dot={{
