@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest) {
   let currentUser: any = request.cookies.get("auth");
   if (currentUser)
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/account`, {
       method: "GET",
       headers: { "x-access-id": currentUser.value },
     }).then((res) => {
