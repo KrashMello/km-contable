@@ -88,7 +88,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let accounts = await fetch(`${process.env.API_URL}/account/`, {
+  let accounts = await fetch(`${process.env.API_URL}/category/account`, {
     method: "GET",
     headers: {
       "x-access-id": String(getCookie("auth", { cookies })),

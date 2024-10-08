@@ -34,7 +34,7 @@ export const transactionStore = create<State & Action>((set, get) => ({
   },
   getAllAmountExpenses: async () => {
     let result: any = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/transaction/getAllAmountExpenses`,
+      `${process.env.NEXT_PUBLIC_API_URL}/transaction/getAllMountsExpenses`,
       {
         method: "GET",
         headers: {
