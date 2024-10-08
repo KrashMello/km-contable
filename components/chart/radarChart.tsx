@@ -29,14 +29,15 @@ const chartConfig = {
 
 export const description = "A radar chart with dots";
 
-const getAllAccountAmount = transactionStore(
-  (state) => state.getAllAmountExpenses,
-);
-const chartData = transactionStore((state) => state.allExpensesTypes);
-useEffect(() => {
-  getAllAccountAmount();
-}, [getAllAccountAmount]);
 export function RadarCharts() {
+  const getAllAccountAmount = transactionStore(
+    (state) => state.getAllAmountExpenses,
+  );
+  const chartData = transactionStore((state) => state.allExpensesTypes);
+  useEffect(() => {
+    getAllAccountAmount();
+  }, [getAllAccountAmount]);
+
   return (
     <div>
       <ChartContainer
