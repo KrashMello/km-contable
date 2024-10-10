@@ -31,7 +31,8 @@ type Action = {
   createTransaction: (data: {
     description: string;
     amount: string;
-    accountId: string;
+    categoryId: string;
+    categoryDebitId: string | null;
     typeId: sting;
     dateEntry: string | Date;
   }) => promise<[number, any]>;

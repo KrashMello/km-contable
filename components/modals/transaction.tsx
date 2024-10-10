@@ -40,6 +40,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import { accountStore, transactionStore } from "@/store";
+import { categoryStore } from "@/store/category";
 
 const FormSchema = z
   .object({
@@ -49,13 +50,14 @@ const FormSchema = z
     typeId: z
       .string()
       .min(1, { message: "El tipo de Transaccion es requerida" }),
-    accountId: z.string().min(1, { message: "La cuenta es requerida" }),
+    categoryId: z.string().min(1, { message: "La cuenta es requerida" }),
+    categoryDebitId: z.string(),
   })
   .required({
     dateEntry: true,
     amount: true,
     typeId: true,
-    accountId: true,
+    categoryId: true,
   });
 
 export default function ModalTransaction() {
@@ -66,26 +68,32 @@ export default function ModalTransaction() {
       amount: "",
       description: "",
       typeId: "",
-      accountId: "",
+      categoryId: "",
+      categoryDebitId: "",
     },
   });
   const getAccounts = accountStore((state) => state.getAccount);
+  const getCategories = categoryStore((state) => state.getCategories);
   const getType = transactionStore((state) => state.getType);
   const createTransaction = transactionStore(
     (state) => state.createTransaction,
   );
   const accounts = accountStore((state) => state.accounts);
   const transactionTypes = transactionStore((state) => state.types);
+  const categories = categoryStore((state) => state.categories);
   useEffect(() => {
     getAccounts();
     getType();
-  }, [getAccounts, getType]);
+    getCategories();
+  }, [getAccounts, getType, getCategories]);
   const [open, setOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState("");
   const [errors, setErrors]: [
     {
       description?: string;
       amount?: string;
-      accountId?: string;
+      categoryId?: string;
+      categoryDebitId?: string;
       typeId?: string;
       date_entry?: string;
     },
@@ -93,6 +101,12 @@ export default function ModalTransaction() {
   ] = useState({});
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     data.dateEntry = format(data.dateEntry, "yyyy-MM-dd");
+    if (selectedType === "2") {
+      const aux = data.categoryId;
+      data.categoryId = data.categoryDebitId;
+      data.categoryDebitId = aux;
+    }
+    delete data.typeId;
     let [status, result] = await createTransaction(data);
     if (status !== 200) {
       setErrors(result.message);
@@ -100,6 +114,7 @@ export default function ModalTransaction() {
     } else {
       setOpen(false);
       form.reset();
+      setSelectedType("");
     }
   }
   return (
@@ -183,7 +198,43 @@ export default function ModalTransaction() {
                 />
                 <FormField
                   control={form.control}
-                  name="accountId"
+                  name="typeId"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Tipo de Transaccion</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            setSelectedType(value);
+                          }}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="seleccione el tipo de transaccion" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {transactionTypes.map((type: any) => {
+                              return (
+                                <SelectItem key={type.id} value={`${type.id}`}>
+                                  {type.name}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      {errors.typeId ? (
+                        <FormMessage>{errors.typeId}</FormMessage>
+                      ) : (
+                        <FormMessage />
+                      )}
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="categoryId"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Cuenta</FormLabel>
@@ -221,39 +272,49 @@ export default function ModalTransaction() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="typeId"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>Tipo de Transaccion</FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="seleccione el tipo de transaccion" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {transactionTypes.map((type: any) => {
-                              return (
-                                <SelectItem key={type.id} value={`${type.id}`}>
-                                  {type.name}
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      {errors.typeId ? (
-                        <FormMessage>{errors.typeId}</FormMessage>
-                      ) : (
-                        <FormMessage />
-                      )}
-                    </FormItem>
-                  )}
-                />
+                {selectedType === "2" && (
+                  <FormField
+                    control={form.control}
+                    name="categoryDebitId"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Categoria</FormLabel>
+                        <FormControl>
+                          {accounts.length > 0 ? (
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="seleccione un tipo de cuenta" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories.map((category: any) => {
+                                  return (
+                                    <SelectItem
+                                      key={window.crypto.randomUUID()}
+                                      value={`${category.id}`}
+                                    >
+                                      {category.name}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <h4>Debe registrar una categoria</h4>
+                          )}
+                        </FormControl>
+                        {errors.accountId ? (
+                          <FormMessage>{errors.categoryDebitId}</FormMessage>
+                        ) : (
+                          <FormMessage />
+                        )}
+                      </FormItem>
+                    )}
+                  />
+                )}
+
                 <FormField
                   control={form.control}
                   name="description"
