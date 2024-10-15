@@ -9,27 +9,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { categoryStore } from "@/store/category";
-export default function AccountsTable() {
-  const getAccounts = categoryStore((state) => state.getAccounts);
-  const accounts = categoryStore((state) => state.accounts);
+export default function CategoriesTable() {
+  const getCategories = categoryStore((state) => state.getCategories);
+  const categories = categoryStore((state) => state.categories);
   useEffect(() => {
-    getAccounts();
-  }, [getAccounts]);
+    getCategories();
+  }, [getCategories]);
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Nombre</TableHead>
-          <TableHead>Tipo de cuenta</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {accounts.map((account: any) => {
+        {categories.map((categories: any) => {
           return (
-            <TableRow key={account.id}>
-              <TableCell className="font-medium">{account.name}</TableCell>
-              <TableCell>{`${account.account.name}`}</TableCell>
+            <TableRow key={categories.id}>
+              <TableCell className="font-medium">{categories.name}</TableCell>
             </TableRow>
           );
         })}
