@@ -1,28 +1,9 @@
-import { format } from "date-fns";
-import { getCookie } from "cookies-next";
-import { cookies } from "next/headers";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadarCharts } from "@/components/chart/radarChart";
 import { BarCharts } from "@/components/chart/barChart";
 import { ExpensesTable } from "@/components/tables/expenses";
 import { IncomesTable } from "@/components/tables/incomes";
 export default async function Estate() {
-  let incomes = await fetch(`${process.env.API_URL}/transaction/getIncomes`, {
-    method: "GET",
-    headers: {
-      "x-access-id": String(getCookie("auth", { cookies })),
-    },
-  });
-  incomes = await incomes.json();
   return (
     <main className="w-full px-4 md:px-12 pt-8 pb-20 flex flex-col gap-4 ">
       <Tabs defaultValue="incomes">
