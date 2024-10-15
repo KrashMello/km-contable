@@ -264,8 +264,8 @@ export default function ModalTransaction() {
                           <h4>Debe registrar una cuenta</h4>
                         )}
                       </FormControl>
-                      {errors.accountId ? (
-                        <FormMessage>{errors.accountId}</FormMessage>
+                      {errors.categoryId ? (
+                        <FormMessage>{errors.categoryId}</FormMessage>
                       ) : (
                         <FormMessage />
                       )}
